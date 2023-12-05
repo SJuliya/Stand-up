@@ -32,7 +32,6 @@ const startServer = async () => {
             if (req.method === "POST" && segments[0] === 'clients') {
                 handleAddClient(req, res);
                 return;
-                // add client
             }
 
             if (req.method === "GET" && segments[0] === 'clients' && segments.length === 2) {

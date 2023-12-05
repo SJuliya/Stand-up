@@ -17,23 +17,28 @@ export const handleAddClient = (req, res) => {
         try {
             const newClient = JSON.parse(body);
 
-            if (!newClient.fullName || !newClient.phone || !newClient.ticketNumber) {
+            if (!newClient.fullName || !newClient.phone || !newClient.ticketNumber || !newClient.booking) {
                 sendError(res, 400, "Неверные данные клиента");
                 return;
             }
 
             if (newClient.booking &&
-               (!Array.isArray(newClient.booking) ||
-                !newClient.booking.every((item) => item.comedian && item.time))
+                (!newClient.booking.length || !Array.isArray(newClient.booking) ||
+                 !newClient.booking.every((item) => item.comedian && item.time))
             ) {
                 sendError(res, 400, "Неверно заполнены поля бронирования");
                 return;
             }
 
             const clientData = await fs.readFile(CLIENTS, 'utf-8');
+            const clients = JSON.parse(clientData);
+
+            clients.push(newClient);
+
+            await fs.writeFile(CLIENTS, JSON.stringify(clients));
             sendData(res, newClient);
         } catch (error) {
-
+            console.log("-> error", error);
         }
     });
 };
