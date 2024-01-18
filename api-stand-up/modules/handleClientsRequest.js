@@ -18,7 +18,6 @@ export const handleClientsRequest = async (req, res, ticketNumber) => {
         sendData(res, client);
     } catch (error) {
         console.error(`Ошибка при обработке запроса: ${error}`);
-
         sendError(res, 500, "Ошибка сервера при обработке запроса клиента");
     }
 }
