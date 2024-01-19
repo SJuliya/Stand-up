@@ -11,7 +11,7 @@ const PORT = 8080;
 const COMEDIANS = './comedians.json';
 export const CLIENTS = './clients.json';
 
-const startServer = async () => {
+const startServer = async (port) => {
     if (!(await checkFileExist(COMEDIANS))) {
         return;
     }
@@ -26,24 +26,30 @@ const startServer = async () => {
             res.setHeader("Access-control-Allow-Origin", "*");
             const segments = req.url.split('/').filter(Boolean);
 
-            if (req.method === "GET" && segments[0] === 'comedians') {
-                handleComediansRequest(req, res, comedians, segments);
+            if (!segments.length) {
+                sendError(res, 404, "Not found");
                 return;
             }
 
-            if (req.method === "POST" && segments[0] === 'clients') {
+            const [resource, id] = segments;
+
+            if (req.method === "GET" && resource === 'comedians') {
+                handleComediansRequest(req, res, comedians, id);
+                return;
+            }
+
+            if (req.method === "POST" && resource === 'clients') {
                 handleAddClient(req, res);
                 return;
             }
 
-            if (req.method === "GET" && segments[0] === 'clients' && segments.length === 2) {
-                const ticketNumber = segments[1];
-                handleClientsRequest(req, res, ticketNumber);
+            if (req.method === "GET" && resource === 'clients' && id) {
+                handleClientsRequest(req, res, id);
                 return;
             }
 
-            if (req.method === "PATCH" && segments[0] === 'clients' && segments.length === 2) {
-                handleUpdateClient(req, res, segments);
+            if (req.method === "PATCH" && resource === 'clients' && id) {
+                handleUpdateClient(req, res, id);
                 return;
             }
 
@@ -51,9 +57,9 @@ const startServer = async () => {
         } catch (error) {
             sendError(res, 500, `Ошибка сервера: ${error}`);
         }
-    }).listen(PORT);
-
-    console.log(`Server is on http://localhost:${PORT}`);
+    }).listen(port, () => {
+        console.log(`Server is on http://localhost:${port}`);
+    });
 };
 
-startServer();
+startServer(PORT);
