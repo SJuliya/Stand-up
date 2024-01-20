@@ -4,6 +4,7 @@ import TomSelect from "tom-select";
 const MAX_COMEDIANS = 6;
 
 const bookingComediansList = document.querySelector('.booking__comedians-list');
+const bookingForm = document.querySelector('.booking__form');
 
 const createComedianBlock = (comedians) => {
     const bookingComedian = document.createElement('li');
@@ -99,6 +100,30 @@ const init = async () => {
     const comedianBlock = createComedianBlock(comedians);
 
     bookingComediansList.append(comedianBlock);
+
+    bookingForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = {booking: []};
+        const times = new Set();
+
+        new FormData(bookingForm).forEach((value, field) => {
+            if (field === 'booking') {
+                const [comedian, time] = value.split(',');
+
+                if (comedian && time) {
+                    data.booking.push({comedian, time});
+                    times.add(time);
+                }
+            } else {
+                data[field] = value;
+            }
+
+            if (times.size !== data.booking.length) {
+                console.log("-> ", 'Нельзя присутствовать на двух выступлениях одновременно');
+                // notification 'Нельзя присутствовать на двух выступлениях одновременно'
+            }
+        });
+    })
 };
 
 init();
