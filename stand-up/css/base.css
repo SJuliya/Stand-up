@@ -89,3 +89,7 @@ fieldset {
     border-color: transparent transparent #1A1A1A transparent;
 
 }
+
+.just-validate-error-label {
+    display: none;
+}

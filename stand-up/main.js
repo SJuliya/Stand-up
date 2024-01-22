@@ -1,7 +1,12 @@
 import './style.css';
 import TomSelect from "tom-select";
+import {Notification} from './js/Notification';
+import Inputmask from "inputmask/lib/inputmask";
+import JustValidate from "just-validate";
 
 const MAX_COMEDIANS = 6;
+
+const notification = Notification.getInstance();
 
 const bookingComediansList = document.querySelector('.booking__comedians-list');
 const bookingForm = document.querySelector('.booking__form');
@@ -101,6 +106,59 @@ const init = async () => {
 
     bookingComediansList.append(comedianBlock);
 
+    const validate = new JustValidate(bookingForm, {
+        errorFieldCssClass: 'booking__input_invalid',
+        successFieldCssClass: 'booking__input_valid',
+    });
+
+    const bookingInputFullname = document.querySelector('.booking__input_fullname');
+    const bookingInputPhone = document.querySelector('.booking__input_phone');
+    const bookingInputTicket = document.querySelector('.booking__input_ticket');
+
+    new Inputmask('+7(999)-999-99-99').mask(bookingInputPhone);
+    new Inputmask('99999999').mask(bookingInputTicket);
+
+    validate
+        .addField(bookingInputFullname, [{
+            rule: 'required',
+            errorMessage: 'Заполните имя',
+        }])
+        .addField(bookingInputPhone, [{
+            rule: 'required',
+            errorMessage: 'Заполните телефон',
+        }, {
+            validator() {
+                const phone = bookingInputPhone.inputmask.unmaskedvalue();
+                return phone.length === 10 && !!Number(phone);
+            },
+            errorMessage: 'Некорректный телефон'
+        }])
+        .addField(bookingInputTicket, [{
+            rule: 'required',
+            errorMessage: 'Заполните номер билета'
+        }, {
+            validator() {
+                const ticket = bookingInputTicket.inputmask.unmaskedvalue();
+                return ticket.length === 8 && !!Number(ticket);
+                },
+            errorMessage: 'Неверный номер билета'
+        }]).onFail((fields) => {
+            let errorMessage = '';
+
+        for (const key in fields) {
+            if (!Object.hasOwnProperty.call(fields, key)) {
+                continue;
+            }
+
+            const element = fields[key];
+            if (!element.isValid) {
+                errorMessage += `${element.errorMessage}, `;
+            }
+        }
+
+        notification.show(errorMessage.slice(0, -2), false);
+    });
+
     bookingForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const data = {booking: []};
@@ -119,8 +177,7 @@ const init = async () => {
             }
 
             if (times.size !== data.booking.length) {
-                console.log("-> ", 'Нельзя присутствовать на двух выступлениях одновременно');
-                // notification 'Нельзя присутствовать на двух выступлениях одновременно'
+                notification.show('Нельзя присутствовать на двух выступлениях одновременно', false);
             }
         });
     })
