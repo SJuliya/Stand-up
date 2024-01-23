@@ -76,27 +76,29 @@ export const initForm = (
         });
         if (times.size !== data.booking.length) {
             Notification.getInstance().show('Нельзя присутствовать на двух выступлениях одновременно', false);
+            return;
         }
 
         if (!times.size) {
             Notification.getInstance().show('Не выбраны комик и/или время');
+            return;
         }
 
         const method = bookingForm.getAttribute('method');
 
         let isSend = false;
 
-        if (method === 'PATH') {
+        if (method === 'PATCH') {
             isSend = await sentData(method, data, data.ticketNumber);
         } else {
             isSend = await sentData(method, data);
         }
 
         if (isSend) {
-            Notification.getInstance.show('Бронь принята', true);
+            Notification.getInstance().show('Бронь принята', true);
             changeSection();
             bookingForm.reset();
-            bookingComediansList();
+            bookingComediansList.textContent = '';
         }
     });
 };

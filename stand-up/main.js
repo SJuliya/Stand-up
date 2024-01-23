@@ -26,7 +26,8 @@ const init = async () => {
         bookingComediansList.append(comedianBlock);
 
         const changeSection =  initChangeSection(
-            bookingForm, event, booking, eventButtonEdit, eventButtonReserve, bookingTitle);
+            bookingForm, event, booking, eventButtonEdit,
+            eventButtonReserve, bookingTitle, comedians, bookingComediansList);
 
         initForm(
             bookingForm, bookingInputFullname, bookingInputPhone,
