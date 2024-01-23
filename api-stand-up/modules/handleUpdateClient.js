@@ -24,7 +24,7 @@ export const handleUpdateClient = async (req, res, ticketNumber) => {
         const clientData = await fs.readFile(CLIENTS, 'utf-8');
         const clients = JSON.parse(clientData);
 
-        const clientIndex = clients.findIndex(c => c.ticketNmber = ticketNumber);
+        const clientIndex = clients.findIndex(c => c.ticketNumber === ticketNumber);
 
         if (clientIndex === -1) {
             sendError(res, 404, "Клиент с данным номером билета не найден");

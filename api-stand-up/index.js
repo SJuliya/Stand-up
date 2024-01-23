@@ -24,6 +24,15 @@ const startServer = async (port) => {
     http.createServer(async (req, res) => {
         try {
             res.setHeader("Access-control-Allow-Origin", "*");
+            res.setHeader("Access-control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
+            res.setHeader("Access-control-Allow-Headers", "Content-Type");
+
+            if (req.method === 'OPTIONS') {
+                res.writeHead(204);
+                res.end();
+                return;
+            }
+
             const segments = req.url.split('/').filter(Boolean);
 
             if (!segments.length) {
