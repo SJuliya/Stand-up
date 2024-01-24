@@ -33,12 +33,12 @@ export const displayBooking = (parent, clientData, comediansData) => {
             const comedianElement = document.createElement('li');
             comedianElement.classList.add('booking__item');
             comedianElement.innerHTML = `
-            <h3>${comedian.comedian}</h3>
-            <p>Время: ${performance.time}</p>
-            <button 
-                class="booking__hall" type="button" 
-                data-booking="${clientData.fullName} ${clientData.ticketNumber} ${comedian.comedian} ${performance.time} ${performance.hall}"
-            > ${[performance.hall]}</button>
+                <h3>${comedian.comedian}</h3>
+                <p>Время: ${performance.time}</p>
+                <button 
+                    class="booking__hall" type="button" 
+                    data-booking="${clientData.fullName} ${clientData.ticketNumber} ${comedian.comedian} ${performance.time} ${performance.hall}"
+                > ${[performance.hall]}</button>
             `;
             return comedianElement;
         }
