@@ -3,8 +3,14 @@ import {initForm} from "./js/form";
 import {getComedians} from "./js/api";
 import {createComedianBlock} from "./js/comedians";
 import {initChangeSection} from "./js/changeSection";
+import {initQrPage} from "./js/qrPage";
 
 const init = async () => {
+    if (window.location.pathname('qr.html')) {
+        initQrPage();
+        return;
+    }
+
     const bookingComediansList = document.querySelector('.booking__comedians-list');
     const bookingForm = document.querySelector('.booking__form');
     const countComedians = document.querySelector('.event__info-item_comedians .event__info-number');
