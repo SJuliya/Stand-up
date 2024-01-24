@@ -6,7 +6,7 @@ import {initChangeSection} from "./js/changeSection";
 import {initQrPage} from "./js/qrPage";
 
 const init = async () => {
-    if (window.location.pathname('qr.html')) {
+    if (window.location.pathname.endsWith('qr.html')) {
         initQrPage();
         return;
     }
